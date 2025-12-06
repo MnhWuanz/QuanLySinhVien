@@ -15,7 +15,7 @@ function createLecturer($email, $password, $full_name) {
             return ['success' => false, 'message' => 'Email đã tồn tại!'];
         }
         
-        // Hash password
+        // Hash password để bảo mật
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         
         // Insert
@@ -44,6 +44,7 @@ function loginLecturer($email, $password) {
         $stmt->execute([$email]);
         $user = $stmt->fetch();
         
+        // Sử dụng password_verify() để kiểm tra mật khẩu đã hash
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
