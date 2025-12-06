@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách sinh viên</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎓 Danh sách sinh viên</h1>
+            <div class="user-info">
+                <span id="userName"></span>
+                <button class="btn-logout" onclick="logout()">Đăng xuất</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm sinh viên...">
+            </div>
+
+            <div class="table-wrapper">
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã SV</th>
+                            <th>Họ và tên</th>
+                            <th>Ngày sinh</th>
+                            <th>Lớp</th>
+                            <th>Email</th>
+                            <th>GPA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px;">
+                                Đang tải dữ liệu...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
