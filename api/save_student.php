@@ -19,8 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $score1 = floatval($_POST['score1'] ?? 0);
     $score2 = floatval($_POST['score2'] ?? 0);
     $score3 = floatval($_POST['score3'] ?? 0);
-    $score = floatval($_POST['score'] ?? 0);
-    $gpa = floatval($_POST['gpa'] ?? 0);
+    // score và gpa sẽ được tính tự động trong functions.php
     
     // Validate
     if (empty($student_code) || empty($full_name) || empty($email)) {
@@ -28,12 +27,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
+    // Validate date of birth: không được lớn hơn ngày hiện tại (không cho phép sinh ngày trong tương lai)
+    if (!empty($dob)) {
+        $dobDate = strtotime($dob);
+        $currentDate = strtotime(date('Y-m-d'));
+        if ($dobDate > $currentDate) {
+            echo json_encode(['success' => false, 'message' => 'Ngày sinh không được lớn hơn ngày hiện tại!']);
+            exit;
+        }
+    }
+    
     if ($id) {
         // Cập nhật
-        $result = updateStudent($id, $student_code, $full_name, $email, $dob, $class_name, $score1, $score2, $score3, $score, $gpa);
+        $result = updateStudent($id, $student_code, $full_name, $email, $dob, $class_name, $score1, $score2, $score3);
     } else {
         // Thêm mới
-        $result = createStudent($student_code, $full_name, $email, $dob, $class_name, $score1, $score2, $score3, $score, $gpa);
+        $result = createStudent($student_code, $full_name, $email, $dob, $class_name, $score1, $score2, $score3);
     }
     
     echo json_encode($result);

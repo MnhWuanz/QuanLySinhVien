@@ -68,7 +68,7 @@ $students = $result['students'];
                 <tbody>
                     <?php if (empty($students)): ?>
                         <tr>
-                            <td colspan="12" style="text-align:center;padding:40px;color:#999;">
+                            <td colspan="13" style="text-align:center;padding:40px;color:#999;">
                                 Chưa có sinh viên. Hãy thêm sinh viên mới!
                             </td>
                         </tr>

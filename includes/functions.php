@@ -93,6 +93,36 @@ function changePassword($userId, $oldPassword, $newPassword) {
 
 // ========== STUDENT FUNCTIONS ==========
 
+// Hàm tính điểm trung bình từ 3 kỳ
+function calculateAverageScore($score1, $score2, $score3) {
+    return round(($score1 + $score2 + $score3) / 3, 2);
+}
+
+// Hàm chuyển đổi điểm sang GPA thang 4
+function convertScoreToGPA($score) {
+    if ($score >= 9.0) return 4.0;
+    if ($score >= 8.5) return 3.7;
+    if ($score >= 8.0) return 3.5;
+    if ($score >= 7.5) return 3.3;
+    if ($score >= 7.0) return 3.0;
+    if ($score >= 6.5) return 2.7;
+    if ($score >= 6.0) return 2.5;
+    if ($score >= 5.5) return 2.3;
+    if ($score >= 5.0) return 2.0;
+    if ($score >= 4.0) return 1.5;
+    return 0.0;
+}
+
+// Hàm lấy xếp loại theo GPA
+function getGradeClassification($gpa) {
+    if ($gpa >= 3.6) return ['text' => 'Xuất sắc', 'class' => 'excellent'];
+    if ($gpa >= 3.0) return ['text' => 'Giỏi', 'class' => 'good'];
+    if ($gpa >= 2.5) return ['text' => 'Khá', 'class' => 'fair'];
+    if ($gpa >= 2.0) return ['text' => 'Trung bình', 'class' => 'average'];
+    if ($gpa >= 1.0) return ['text' => 'Yếu', 'class' => 'weak'];
+    return ['text' => 'Kém', 'class' => 'poor'];
+}
+
 // Lấy tất cả sinh viên
 function getAllStudents() {
     try {
@@ -124,7 +154,7 @@ function getStudentById($id) {
 }
 
 // Thêm sinh viên
-function createStudent($student_code, $full_name, $email, $dob = null, $class_name = null, $score1 = 0, $score2 = 0, $score3 = 0, $score = 0, $gpa = 0) {
+function createStudent($student_code, $full_name, $email, $dob = null, $class_name = null, $score1 = 0, $score2 = 0, $score3 = 0) {
     try {
         $pdo = getConnection();
         
@@ -134,6 +164,15 @@ function createStudent($student_code, $full_name, $email, $dob = null, $class_na
         if ($stmt->fetch()) {
             return ['success' => false, 'message' => 'Mã sinh viên đã tồn tại!'];
         }
+        
+        // Validate ngày sinh không được lớn hơn ngày hiện tại
+        if ($dob && strtotime($dob) > time()) {
+            return ['success' => false, 'message' => 'Ngày sinh không hợp lệ! Không được lớn hơn ngày hiện tại.'];
+        }
+        
+        // Tính điểm TB và GPA tự động
+        $score = calculateAverageScore($score1, $score2, $score3);
+        $gpa = convertScoreToGPA($score);
         
         // Insert
         $stmt = $pdo->prepare("
@@ -153,7 +192,7 @@ function createStudent($student_code, $full_name, $email, $dob = null, $class_na
 }
 
 // Cập nhật sinh viên
-function updateStudent($id, $student_code, $full_name, $email, $dob = null, $class_name = null, $score1 = 0, $score2 = 0, $score3 = 0, $score = 0, $gpa = 0) {
+function updateStudent($id, $student_code, $full_name, $email, $dob = null, $class_name = null, $score1 = 0, $score2 = 0, $score3 = 0) {
     try {
         $pdo = getConnection();
         
@@ -163,6 +202,15 @@ function updateStudent($id, $student_code, $full_name, $email, $dob = null, $cla
         if ($stmt->fetch()) {
             return ['success' => false, 'message' => 'Mã sinh viên đã tồn tại!'];
         }
+        
+        // Validate ngày sinh không được lớn hơn ngày hiện tại
+        if ($dob && strtotime($dob) > time()) {
+            return ['success' => false, 'message' => 'Ngày sinh không hợp lệ! Không được lớn hơn ngày hiện tại.'];
+        }
+        
+        // Tính điểm TB và GPA tự động
+        $score = calculateAverageScore($score1, $score2, $score3);
+        $gpa = convertScoreToGPA($score);
         
         // Update
         $stmt = $pdo->prepare("
