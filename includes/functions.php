@@ -35,19 +35,16 @@ function createLecturer($email, $password, $full_name) {
     }
 }
 
-// Đăng nhập - LỖI: SQL INJECTION
+// Đăng nhập
 function loginLecturer($email, $password) {
     try {
         $pdo = getConnection();
         
-        // ❌ LỖI SQL INJECTION: Ghép trực tiếp biến vào query - KHÔNG an toàn!
-        // Hacker có thể inject SQL command để bypass authentication
-        $query = "SELECT * FROM lecturers WHERE email = '$email' AND password = '$password'";
-        $stmt = $pdo->query($query);
+        $stmt = $pdo->prepare("SELECT * FROM lecturers WHERE email = ?");
+        $stmt->execute([$email]);
         $user = $stmt->fetch();
         
-        // Kiểm tra user tồn tại (không verify password hash)
-        if ($user) {
+        if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['full_name'] = $user['full_name'];
@@ -58,8 +55,7 @@ function loginLecturer($email, $password) {
             return ['success' => false, 'message' => 'Email hoặc mật khẩu không đúng!'];
         }
     } catch (Exception $e) {
-        // Trả về lỗi SQL để dễ debug (LỖI BẢO MẬT: Lộ thông tin database)
-        return ['success' => false, 'message' => 'SQL Error: ' . $e->getMessage()];
+        return ['success' => false, 'message' => $e->getMessage()];
     }
 }
 
