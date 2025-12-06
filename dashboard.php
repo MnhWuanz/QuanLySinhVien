@@ -25,6 +25,7 @@ $students = $result['students'];
             <h1>🎓 Quản Lý Sinh Viên</h1>
             <div class="user-info">
                 <span>Xin chào, <strong><?php echo htmlspecialchars($user['full_name']); ?></strong></span>
+                <a href="change_password.php" class="btn btn-warning">🔒 Đổi MK</a>
                 <a href="logout.php" class="btn btn-danger">Đăng xuất</a>
             </div>
         </header>

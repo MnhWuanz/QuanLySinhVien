@@ -59,6 +59,38 @@ function loginLecturer($email, $password) {
     }
 }
 
+// Đổi mật khẩu
+function changePassword($userId, $oldPassword, $newPassword) {
+    try {
+        $pdo = getConnection();
+        
+        // Lấy mật khẩu hiện tại
+        $stmt = $pdo->prepare("SELECT password FROM lecturers WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch();
+        
+        if (!$user) {
+            return ['success' => false, 'message' => 'Không tìm thấy người dùng!'];
+        }
+        
+        // Kiểm tra mật khẩu cũ
+        if (!password_verify($oldPassword, $user['password'])) {
+            return ['success' => false, 'message' => 'Mật khẩu cũ không đúng!'];
+        }
+        
+        // Hash mật khẩu mới
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        
+        // Cập nhật
+        $stmt = $pdo->prepare("UPDATE lecturers SET password = ? WHERE id = ?");
+        $stmt->execute([$hashedPassword, $userId]);
+        
+        return ['success' => true, 'message' => 'Đổi mật khẩu thành công!'];
+    } catch (Exception $e) {
+        return ['success' => false, 'message' => $e->getMessage()];
+    }
+}
+
 // ========== STUDENT FUNCTIONS ==========
 
 // Lấy tất cả sinh viên

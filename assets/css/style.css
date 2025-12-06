@@ -170,6 +170,15 @@ body {
     background: #c0392b;
 }
 
+.btn-warning {
+    background: #f39c12;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #e67e22;
+}
+
 .btn-edit {
     background: #3498db;
     color: white;
@@ -341,6 +350,40 @@ tbody td {
 .actions {
     display: flex;
     gap: 5px;
+}
+
+/* ========== CHANGE PASSWORD ========== */
+.change-password-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.change-password-box {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.change-password-box h2 {
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.change-password-box .subtitle {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.form-actions .btn {
+    flex: 1;
 }
 
 /* ========== MODAL ========== */
