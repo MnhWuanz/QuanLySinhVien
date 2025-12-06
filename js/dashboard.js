@@ -14,8 +14,8 @@ function displayUserName() {
     document.getElementById('userName').textContent = `Xin chào, ${userName}`;
 }
 
-// Dữ liệu sinh viên mẫu
-const studentsData = [
+// Dữ liệu sinh viên (load từ localStorage hoặc dữ liệu mẫu)
+let studentsData = JSON.parse(localStorage.getItem('studentsData')) || [
     { id: 1, student_code: 'SV2024001', full_name: 'Nguyễn Văn An', dob: '2003-05-15', class_name: 'CNTT-K14', email: 'an.nguyen@example.com', gpa: 8.5 },
     { id: 2, student_code: 'SV2024002', full_name: 'Trần Thị Bích', dob: '2003-08-20', class_name: 'KT-K14', email: 'bich.tran@example.com', gpa: 7.2 },
     { id: 3, student_code: 'SV2024003', full_name: 'Lê Hoàng Nam', dob: '2002-12-01', class_name: 'QTKD-K13', email: 'nam.le@example.com', gpa: 6.8 },
@@ -95,6 +95,74 @@ function logout() {
     }
 }
 
+// Mở modal thêm
+function openAddModal() {
+    document.getElementById('addForm').reset();
+    document.getElementById('addModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+// Đóng modal
+function closeModal() {
+    document.getElementById('addModal').classList.remove('show');
+    document.body.style.overflow = 'auto';
+}
+
+// Lưu dữ liệu vào localStorage
+function saveToLocalStorage() {
+    localStorage.setItem('studentsData', JSON.stringify(studentsData));
+}
+
+// Thêm sinh viên
+function addStudent(e) {
+    e.preventDefault();
+    
+    const newStudent = {
+        id: studentsData.length > 0 ? Math.max(...studentsData.map(s => s.id)) + 1 : 1,
+        student_code: document.getElementById('studentCode').value.trim(),
+        full_name: document.getElementById('fullName').value.trim(),
+        dob: document.getElementById('dob').value || null,
+        class_name: document.getElementById('className').value.trim() || null,
+        email: document.getElementById('email').value.trim(),
+        gpa: parseFloat(document.getElementById('gpa').value) || 0
+    };
+    
+    // Kiểm tra mã SV trùng
+    if (studentsData.find(s => s.student_code === newStudent.student_code)) {
+        alert('❌ Mã sinh viên đã tồn tại!');
+        return;
+    }
+    
+    studentsData.push(newStudent);
+    saveToLocalStorage();
+    displayStudents(studentsData);
+    closeModal();
+    showNotification('✅ Thêm sinh viên thành công!');
+}
+
+// Hiển thị thông báo
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #51cf66;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        z-index: 10000;
+        font-weight: 500;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
 // Event listeners
 document.getElementById('searchInput').addEventListener('input', searchStudents);
 
@@ -102,4 +170,5 @@ document.getElementById('searchInput').addEventListener('input', searchStudents)
 if (checkAuth()) {
     displayUserName();
     displayStudents(studentsData);
+    saveToLocalStorage(); // Lưu dữ liệu ban đầu nếu chưa có
 }
