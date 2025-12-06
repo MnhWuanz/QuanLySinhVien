@@ -43,6 +43,25 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         // Fallback: Demo credentials khi chưa có backend
         console.warn('Backend chưa sẵn sàng, dùng chế độ demo');
         
+        // Kiểm tra tài khoản đã đăng ký
+        const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        const user = registeredUsers.find(u => u.email === username && u.password === password);
+        
+        if (user) {
+            if (remember) {
+                localStorage.setItem('rememberedUser', username);
+            }
+            
+            sessionStorage.setItem('loggedIn', 'true');
+            sessionStorage.setItem('userEmail', username);
+            sessionStorage.setItem('userName', user.full_name);
+            sessionStorage.setItem('userId', user.id);
+            
+            alert('Đăng nhập thành công! Xin chào ' + user.full_name);
+            window.location.href = 'dashboard.html';
+            return;
+        }
+        
         if (username === 'admin@example.com' && password === 'password') {
             if (remember) {
                 localStorage.setItem('rememberedUser', username);

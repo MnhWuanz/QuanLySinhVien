@@ -131,3 +131,26 @@ body {
 .links a:hover {
     text-decoration: underline;
 }
+
+.links .separator {
+    margin: 0 10px;
+    color: #ccc;
+}
+
+.links .register-link {
+    color: #764ba2;
+    font-weight: 500;
+}
+
+.required {
+    color: #dc3545;
+}
+
+.link-inline {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.link-inline:hover {
+    text-decoration: underline;
+}
