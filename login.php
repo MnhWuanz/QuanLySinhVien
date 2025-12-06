@@ -14,16 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     
-    if (empty($email) || empty($password)) {
-        $error = 'Vui lòng nhập đầy đủ thông tin!';
+    // Bỏ validation để có thể test SQL injection
+    $result = loginLecturer($email, $password);
+    if ($result['success']) {
+        header('Location: dashboard.php');
+        exit;
     } else {
-        $result = loginLecturer($email, $password);
-        if ($result['success']) {
-            header('Location: dashboard.php');
-            exit;
-        } else {
-            $error = $result['message'];
-        }
+        $error = $result['message'];
     }
 }
 ?>
@@ -49,12 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="email">📧 Email</label>
                     <input 
-                        type="email" 
+                        type="text" 
                         id="email" 
                         name="email" 
                         placeholder="Nhập email"
                         value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
-                        required
                     >
                 </div>
                 
@@ -65,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         id="password" 
                         name="password" 
                         placeholder="Nhập mật khẩu"
-                        required
                     >
                 </div>
                 
