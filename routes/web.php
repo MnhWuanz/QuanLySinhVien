@@ -22,7 +22,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
     Route::post('/change-password', [AuthController::class, 'changePassword']);
     
-    // Student Management
+    // Student Management API
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
     Route::post('/students', [StudentController::class, 'store'])->name('students.store');
     Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');

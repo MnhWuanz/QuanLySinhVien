@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ServiceProvider;
+
 return [
     'name' => env('APP_NAME', 'Laravel'),
     'env' => env('APP_ENV', 'production'),
@@ -20,4 +23,11 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+    'providers' => ServiceProvider::defaultProviders()->merge([
+        // Package Service Providers...
+        // Application Service Providers...
+    ])->toArray(),
+    'aliases' => Facade::defaultAliases()->merge([
+        // 'Example' => App\Facades\Example::class,
+    ])->toArray(),
 ];
