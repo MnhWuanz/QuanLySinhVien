@@ -10,6 +10,7 @@
         </div>
         <div class="header-right">
             <span>Xin chào, <strong>{{ Auth::user()->full_name }}</strong></span>
+            <a href="{{ route('reports.index') }}" class="btn btn-success">📊 Báo Cáo</a>
             <a href="{{ route('change-password') }}" class="btn btn-secondary">Đổi mật khẩu</a>
             <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                 @csrf
