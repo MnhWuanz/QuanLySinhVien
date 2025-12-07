@@ -1,40 +1,25 @@
 <?php
-// Bắt đầu session
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
-// Kiểm tra đăng nhập
-function isLoggedIn() {
-    return isset($_SESSION['user_id']) && isset($_SESSION['email']);
-}
+use Illuminate\Support\Str;
 
-// Lấy thông tin user hiện tại
-function getCurrentUser() {
-    if (isLoggedIn()) {
-        return [
-            'id' => $_SESSION['user_id'],
-            'email' => $_SESSION['email'],
-            'full_name' => $_SESSION['full_name'] ?? '',
-            'role' => $_SESSION['role'] ?? 'lecturer'
-        ];
-    }
-    return null;
-}
-
-// Đăng xuất
-function logout() {
-    session_unset();
-    session_destroy();
-    header('Location: login.php');
-    exit;
-}
-
-// Bảo vệ trang (yêu cầu đăng nhập)
-function requireLogin() {
-    if (!isLoggedIn()) {
-        header('Location: login.php');
-        exit;
-    }
-}
-?>
+return [
+    'driver' => env('SESSION_DRIVER', 'file'),
+    'lifetime' => env('SESSION_LIFETIME', 120),
+    'expire_on_close' => false,
+    'encrypt' => false,
+    'files' => storage_path('framework/sessions'),
+    'connection' => env('SESSION_CONNECTION'),
+    'table' => 'sessions',
+    'store' => env('SESSION_STORE'),
+    'lottery' => [2, 100],
+    'cookie' => env(
+        'SESSION_COOKIE',
+        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
+    ),
+    'path' => '/',
+    'domain' => env('SESSION_DOMAIN'),
+    'secure' => env('SESSION_SECURE_COOKIE'),
+    'http_only' => true,
+    'same_site' => 'lax',
+    'partitioned' => false,
+];
