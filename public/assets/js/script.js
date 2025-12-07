@@ -1,133 +1,56 @@
-// ========== GPA CALCULATION ==========
-function calculateGPA() {
-    const score1 = parseFloat(document.getElementById('score1').value) || 0;
-    const score2 = parseFloat(document.getElementById('score2').value) || 0;
-    const score3 = parseFloat(document.getElementById('score3').value) || 0;
-    
-    // Tính điểm trung bình 3 kỳ
-    const avgScore = (score1 + score2 + score3) / 3;
-    const scoreInput = document.getElementById('score');
-    const gpaInput = document.getElementById('gpa');
-    const ratingInput = document.getElementById('rating');
-    
-    scoreInput.value = avgScore.toFixed(2);
-    
-    let gpa = 0;
-    let rating = '';
-    
-    // Công thức chuyển đổi điểm trung bình sang GPA thang 4
-    if (avgScore >= 9.0) {
-        gpa = 4.0;
-        rating = 'Xuất sắc';
-    } else if (avgScore >= 8.5) {
-        gpa = 3.7;
-        rating = 'Xuất sắc';
-    } else if (avgScore >= 8.0) {
-        gpa = 3.5;
-        rating = 'Giỏi';
-    } else if (avgScore >= 7.5) {
-        gpa = 3.3;
-        rating = 'Giỏi';
-    } else if (avgScore >= 7.0) {
-        gpa = 3.0;
-        rating = 'Khá';
-    } else if (avgScore >= 6.5) {
-        gpa = 2.7;
-        rating = 'Khá';
-    } else if (avgScore >= 6.0) {
-        gpa = 2.5;
-        rating = 'Khá';
-    } else if (avgScore >= 5.5) {
-        gpa = 2.3;
-        rating = 'Trung bình';
-    } else if (avgScore >= 5.0) {
-        gpa = 2.0;
-        rating = 'Trung bình';
-    } else if (avgScore >= 4.0) {
-        gpa = 1.5;
-        rating = 'Yếu';
-    } else {
-        gpa = 0.0;
-        rating = 'Kém';
-    }
-    
-    gpaInput.value = gpa.toFixed(2);
-    ratingInput.value = rating;
-    
-    // Màu sắc cho xếp loại
-    if (gpa >= 3.5) {
-        ratingInput.style.color = '#27ae60';
-    } else if (gpa >= 3.0) {
-        ratingInput.style.color = '#3498db';
-    } else if (gpa >= 2.5) {
-        ratingInput.style.color = '#f39c12';
-    } else if (gpa >= 2.0) {
-        ratingInput.style.color = '#e67e22';
-    } else {
-        ratingInput.style.color = '#e74c3c';
-    }
-}
+// Get CSRF token
+const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
 // ========== MODAL FUNCTIONS ==========
 function openModal() {
     document.getElementById('modalTitle').textContent = 'Thêm Sinh Viên Mới';
     document.getElementById('studentForm').reset();
     document.getElementById('studentId').value = '';
-    document.getElementById('modal').classList.add('show');
+    document.getElementById('studentModal').style.display = 'block';
 }
 
 function closeModal() {
-    document.getElementById('modal').classList.remove('show');
+    document.getElementById('studentModal').style.display = 'none';
 }
 
-function editStudent(student) {
-    document.getElementById('modalTitle').textContent = 'Sửa Thông Tin Sinh Viên';
-    document.getElementById('studentId').value = student.id;
-    document.getElementById('student_code').value = student.student_code;
-    document.getElementById('full_name').value = student.full_name;
-    document.getElementById('dob').value = student.dob || '';
-    document.getElementById('class_name').value = student.class_name || '';
-    document.getElementById('email').value = student.email;
-    document.getElementById('score1').value = student.score1 || 0;
-    document.getElementById('score2').value = student.score2 || 0;
-    document.getElementById('score3').value = student.score3 || 0;
-    document.getElementById('score').value = student.score || 0;
-    document.getElementById('gpa').value = student.gpa || 0;
-    
-    // Tính lại GPA và rating
-    calculateGPA();
-    
-    document.getElementById('modal').classList.add('show');
+function openEditModal(id) {
+    fetch(`/students/${id}`)
+        .then(response => response.json())
+        .then(student => {
+            document.getElementById('modalTitle').textContent = 'Sửa Thông Tin Sinh Viên';
+            document.getElementById('studentId').value = student.id;
+            document.getElementById('student_code').value = student.student_code;
+            document.getElementById('full_name').value = student.full_name;
+            document.getElementById('email').value = student.email;
+            document.getElementById('dob').value = student.dob || '';
+            document.getElementById('class_name').value = student.class_name || '';
+            document.getElementById('score1').value = student.score1 || 0;
+            document.getElementById('score2').value = student.score2 || 0;
+            document.getElementById('score3').value = student.score3 || 0;
+            
+            document.getElementById('studentModal').style.display = 'block';
+        })
+        .catch(error => {
+            alert('Lỗi khi tải dữ liệu sinh viên: ' + error.message);
+        });
 }
 
 // Đóng modal khi click bên ngoài
 window.onclick = function(event) {
-    const modal = document.getElementById('modal');
+    const modal = document.getElementById('studentModal');
     if (event.target === modal) {
         closeModal();
     }
 }
 
-// ========== NOTIFICATION ==========
-function showNotification(message, type = 'success') {
-    const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.className = `notification ${type}`;
-    notification.style.display = 'block';
-    
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 3000);
-}
-
 // ========== SEARCH FUNCTION ==========
-function searchTable() {
+function searchStudents() {
     const input = document.getElementById('searchInput');
     const filter = input.value.toLowerCase();
     const table = document.getElementById('studentTable');
-    const rows = table.getElementsByTagName('tr');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
     
-    for (let i = 1; i < rows.length; i++) {
+    for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
         const text = row.textContent || row.innerText;
         
@@ -145,60 +68,82 @@ function deleteStudent(id) {
         return;
     }
     
-    fetch('api/delete_student.php?id=' + id, {
-        method: 'POST'
+    fetch(`/students/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
     })
     .then(response => response.json())
     .then(result => {
         if (result.success) {
-            showNotification(result.message, 'success');
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+            alert(result.message);
+            window.location.reload();
         } else {
-            showNotification(result.message, 'error');
+            alert('Lỗi: ' + result.message);
         }
     })
     .catch(error => {
-        showNotification('Lỗi: ' + error.message, 'error');
+        alert('Lỗi: ' + error.message);
     });
 }
 
 // ========== FORM SUBMIT ==========
-const form = document.getElementById('studentForm');
-if (form) {
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        const submitBtn = this.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        
-        submitBtn.disabled = true;
-        submitBtn.textContent = '⏳ Đang lưu...';
-        
-        fetch('api/save_student.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                showNotification(result.message, 'success');
-                closeModal();
-                setTimeout(() => {
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('studentForm');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const studentId = document.getElementById('studentId').value;
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Đang lưu...';
+            
+            // Chuyển FormData thành JSON
+            const data = {};
+            formData.forEach((value, key) => {
+                if (key !== '_token' && key !== '_method') {
+                    data[key] = value;
+                }
+            });
+            
+            // Xác định URL và method
+            const url = studentId ? `/students/${studentId}` : '/students';
+            const method = studentId ? 'PUT' : 'POST';
+            
+            fetch(url, {
+                method: method,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert(result.message);
+                    closeModal();
                     window.location.reload();
-                }, 1000);
-            } else {
-                showNotification(result.message, 'error');
+                } else {
+                    alert('Lỗi: ' + (result.message || 'Có lỗi xảy ra'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            })
+            .catch(error => {
+                alert('Lỗi: ' + error.message);
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
-            }
-        })
-        .catch(error => {
-            showNotification('Lỗi: ' + error.message, 'error');
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
+            });
         });
-    });
-}
+    }
+});

@@ -55,12 +55,12 @@ class Student extends Model
     {
         $gpa = $this->gpa;
         
-        if ($gpa >= 3.6) return ['text' => 'Xuất sắc', 'class' => 'excellent'];
-        if ($gpa >= 3.0) return ['text' => 'Giỏi', 'class' => 'good'];
-        if ($gpa >= 2.5) return ['text' => 'Khá', 'class' => 'fair'];
-        if ($gpa >= 2.0) return ['text' => 'Trung bình', 'class' => 'average'];
-        if ($gpa >= 1.0) return ['text' => 'Yếu', 'class' => 'weak'];
-        return ['text' => 'Kém', 'class' => 'poor'];
+        if ($gpa >= 3.6) return ['text' => 'Xuất sắc', 'class' => 'grade-xuat-sac'];
+        if ($gpa >= 3.0) return ['text' => 'Giỏi', 'class' => 'grade-gioi'];
+        if ($gpa >= 2.5) return ['text' => 'Khá', 'class' => 'grade-kha'];
+        if ($gpa >= 2.0) return ['text' => 'Trung bình', 'class' => 'grade-trung-binh'];
+        if ($gpa >= 1.0) return ['text' => 'Yếu', 'class' => 'grade-yeu'];
+        return ['text' => 'Kém', 'class' => 'grade-yeu'];
     }
 
     // Auto calculate on save

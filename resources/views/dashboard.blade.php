@@ -93,63 +93,67 @@
 <!-- Modal Thêm/Sửa Sinh Viên -->
 <div id="studentModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle">Thêm Sinh Viên</h2>
+        <div class="modal-header">
+            <h2 id="modalTitle">Thêm Sinh Viên</h2>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
         
         <form id="studentForm">
             @csrf
-            <input type="hidden" id="studentId" name="id">
-            <input type="hidden" id="formMethod" name="_method" value="POST">
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="student_code">Mã sinh viên *</label>
-                    <input type="text" id="student_code" name="student_code" required>
+            <div class="modal-body">
+                <input type="hidden" id="studentId" name="id">
+                <input type="hidden" id="formMethod" name="_method" value="POST">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="student_code">Mã sinh viên <span class="required">*</span></label>
+                        <input type="text" id="student_code" name="student_code" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="full_name">Họ và tên <span class="required">*</span></label>
+                        <input type="text" id="full_name" name="full_name" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dob">Ngày sinh</label>
+                        <input type="date" id="dob" name="dob">
+                    </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="full_name">Họ và tên *</label>
-                    <input type="text" id="full_name" name="full_name" required>
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="email">Email *</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="class_name">Lớp</label>
+                    <input type="text" id="class_name" name="class_name">
                 </div>
                 
-                <div class="form-group">
-                    <label for="dob">Ngày sinh</label>
-                    <input type="date" id="dob" name="dob">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="score1">Điểm Kỳ 1</label>
+                        <input type="number" id="score1" name="score1" min="0" max="10" step="0.01" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="score2">Điểm Kỳ 2</label>
+                        <input type="number" id="score2" name="score2" min="0" max="10" step="0.01" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="score3">Điểm Kỳ 3</label>
+                        <input type="number" id="score3" name="score3" min="0" max="10" step="0.01" value="0">
+                    </div>
                 </div>
             </div>
             
-            <div class="form-group">
-                <label for="class_name">Lớp</label>
-                <input type="text" id="class_name" name="class_name">
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="score1">Điểm Kỳ 1</label>
-                    <input type="number" id="score1" name="score1" min="0" max="10" step="0.01" value="0">
-                </div>
-                
-                <div class="form-group">
-                    <label for="score2">Điểm Kỳ 2</label>
-                    <input type="number" id="score2" name="score2" min="0" max="10" step="0.01" value="0">
-                </div>
-                
-                <div class="form-group">
-                    <label for="score3">Điểm Kỳ 3</label>
-                    <input type="number" id="score3" name="score3" min="0" max="10" step="0.01" value="0">
-                </div>
-            </div>
-            
-            <div class="form-actions">
+            <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
-                <button type="submit" class="btn btn-primary">Lưu</button>
+                <button type="submit" class="btn btn-success">Lưu</button>
             </div>
         </form>
     </div>

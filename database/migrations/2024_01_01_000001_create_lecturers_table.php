@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('lecturers', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
+            $table->string('email', 100)->unique();
             $table->string('password');
-            $table->string('full_name');
-            $table->string('role')->default('lecturer');
+            $table->string('full_name', 100);
+            $table->string('role', 50)->default('lecturer');
             $table->timestamps();
         });
     }

@@ -73,6 +73,7 @@ class AuthController extends Controller
             'new_password' => 'required|string|min:6|confirmed',
         ]);
 
+        /** @var \App\Models\Lecturer $user */
         $user = Auth::user();
 
         if (!Hash::check($request->old_password, $user->password)) {
